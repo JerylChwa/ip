@@ -5,6 +5,8 @@ import java.util.Scanner;
 public class PDD {
     private static final String LINE = "____________________________________________________________";
 
+    private enum Command { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT }
+
     public static void main(String[] args) {
         String banner = " ____  ____  ____  \n"
                 + "|  _ \\|  _ \\|  _ \\ \n"
@@ -33,35 +35,50 @@ public class PDD {
             String command = spaceIndex == -1 ? input : input.substring(0, spaceIndex);
             String commandArgs = spaceIndex == -1 ? "" : input.substring(spaceIndex + 1).trim();
             try {
-                if (command.equals("list")) {
+                Command cmd;
+                try {
+                    cmd = Command.valueOf(command.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new PDDException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+                }
+                switch (cmd) {
+                case LIST:
                     System.out.println("Here are the tasks in your list:");
                     for (int i = 0; i < tasks.size(); i++) {
                         System.out.println((i + 1) + "." + tasks.get(i));
                     }
-                } else if (command.equals("mark")) {
+                    break;
+                case MARK: {
                     int index = parseTaskIndex(commandArgs, tasks.size());
                     Task task = tasks.get(index);
                     task.markAsDone();
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  " + task);
-                } else if (command.equals("unmark")) {
+                    break;
+                }
+                case UNMARK: {
                     int index = parseTaskIndex(commandArgs, tasks.size());
                     Task task = tasks.get(index);
                     task.markAsNotDone();
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  " + task);
-                } else if (command.equals("delete")) {
+                    break;
+                }
+                case DELETE: {
                     int index = parseTaskIndex(commandArgs, tasks.size());
                     Task removed = tasks.remove(index);
                     System.out.println("Noted. I've removed this task:");
                     System.out.println("  " + removed);
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
-                } else if (command.equals("todo")) {
+                    break;
+                }
+                case TODO:
                     if (commandArgs.isEmpty()) {
                         throw new PDDException("OOPS!!! The description of a todo cannot be empty.");
                     }
                     addTask(tasks, new Todo(commandArgs));
-                } else if (command.equals("deadline")) {
+                    break;
+                case DEADLINE: {
                     if (commandArgs.isEmpty()) {
                         throw new PDDException("OOPS!!! The description of a deadline cannot be empty.");
                     }
@@ -71,7 +88,9 @@ public class PDD {
                                 + "date/time, e.g. deadline return book /by Sunday");
                     }
                     addTask(tasks, new Deadline(parts[0].trim(), parts[1].trim()));
-                } else if (command.equals("event")) {
+                    break;
+                }
+                case EVENT: {
                     if (commandArgs.isEmpty()) {
                         throw new PDDException("OOPS!!! The description of an event cannot be empty.");
                     }
@@ -86,7 +105,9 @@ public class PDD {
                                 + "'/to' time, e.g. event meeting /from Mon 2pm /to 4pm");
                     }
                     addTask(tasks, new Event(parts[0].trim(), fromTo[0].trim(), fromTo[1].trim()));
-                } else {
+                    break;
+                }
+                default:
                     throw new PDDException("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }
             } catch (PDDException e) {
