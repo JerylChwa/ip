@@ -196,6 +196,194 @@ ____________________________________________________________
 
 ---
 
+## TC5: Unknown command
+
+**Aim**: Verify that an unrecognized command produces an error message
+instead of being silently added as a task, and that the program keeps
+running afterwards.
+
+**Input**:
+```
+blah
+todo borrow book
+list
+bye
+```
+
+**Expected output**:
+```
+____________________________________________________________
+ ____  ____  ____  
+|  _ \|  _ \|  _ \ 
+| |_) | | | | | | |
+|  __/| |_| | |_| |
+|_|   |____/|____/ 
+
+Hello! I'm PDD.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS!!! I'm sorry, but I don't know what that means :-(
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] borrow book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] borrow book
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+---
+
+## TC6: Empty todo/deadline/event descriptions
+
+**Aim**: Verify that `todo`, `deadline`, and `event` commands with no
+description produce a specific error message for each, and add no task.
+
+**Input**:
+```
+todo
+deadline
+event
+list
+bye
+```
+
+**Expected output**:
+```
+____________________________________________________________
+ ____  ____  ____  
+|  _ \|  _ \|  _ \ 
+| |_) | | | | | | |
+|  __/| |_| | |_| |
+|_|   |____/|____/ 
+
+Hello! I'm PDD.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The description of a todo cannot be empty.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The description of a deadline cannot be empty.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The description of an event cannot be empty.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+---
+
+## TC7: Deadline/event missing required markers
+
+**Aim**: Verify that `deadline` without `/by`, and `event` without `/from`
+or `/to`, produce a specific, corrective error message, and add no task.
+
+**Input**:
+```
+deadline return book
+event meeting /from Mon 2pm
+list
+bye
+```
+
+**Expected output**:
+```
+____________________________________________________________
+ ____  ____  ____  
+|  _ \|  _ \|  _ \ 
+| |_) | | | | | | |
+|  __/| |_| | |_| |
+|_|   |____/|____/ 
+
+Hello! I'm PDD.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS!!! A deadline needs a description and a '/by' date/time, e.g. deadline return book /by Sunday
+____________________________________________________________
+____________________________________________________________
+OOPS!!! An event needs a description, a '/from' and a '/to' time, e.g. event meeting /from Mon 2pm /to 4pm
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+---
+
+## TC8: Invalid mark/unmark task numbers
+
+**Aim**: Verify that `mark`/`unmark` with a missing, non-numeric, or
+out-of-range task number produce a specific error message, and do not
+crash the program.
+
+**Input**:
+```
+todo borrow book
+mark
+mark abc
+mark 5
+unmark 0
+list
+bye
+```
+
+**Expected output**:
+```
+____________________________________________________________
+ ____  ____  ____  
+|  _ \|  _ \|  _ \ 
+| |_) | | | | | | |
+|  __/| |_| | |_| |
+|_|   |____/|____/ 
+
+Hello! I'm PDD.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] borrow book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Please provide a valid task number, e.g. mark 2
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Please provide a valid task number, e.g. mark 2
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Task number 5 does not exist. You have 1 task(s) in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Task number 0 does not exist. You have 1 task(s) in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] borrow book
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+---
+
 ## Adding new test cases
 
 Append a new `## TCn: <title>` section following the same structure (Aim,
