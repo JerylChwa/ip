@@ -18,8 +18,7 @@ public class PDD {
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 
-        List<String> tasks = new ArrayList<>();
-        List<Boolean> done = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
@@ -33,29 +32,26 @@ public class PDD {
             if (input.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println((i + 1) + "." + statusIcon(done.get(i)) + " " + tasks.get(i));
+                    System.out.println((i + 1) + "." + tasks.get(i));
                 }
             } else if (input.startsWith("mark ")) {
                 int index = Integer.parseInt(input.substring(5).trim()) - 1;
-                done.set(index, true);
+                Task task = tasks.get(index);
+                task.markAsDone();
                 System.out.println("Nice! I've marked this task as done:");
-                System.out.println("  " + statusIcon(done.get(index)) + " " + tasks.get(index));
+                System.out.println("  " + task);
             } else if (input.startsWith("unmark ")) {
                 int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                done.set(index, false);
+                Task task = tasks.get(index);
+                task.markAsNotDone();
                 System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("  " + statusIcon(done.get(index)) + " " + tasks.get(index));
+                System.out.println("  " + task);
             } else {
-                tasks.add(input);
-                done.add(false);
+                tasks.add(new Task(input));
                 System.out.println("added: " + input);
             }
             System.out.println(LINE);
         }
         scanner.close();
-    }
-
-    private static String statusIcon(boolean isDone) {
-        return isDone ? "[X]" : "[ ]";
     }
 }
