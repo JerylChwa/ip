@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class PDD {
@@ -16,6 +18,7 @@ public class PDD {
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 
+        List<String> tasks = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
@@ -26,7 +29,14 @@ public class PDD {
                 break;
             }
             System.out.println(LINE);
-            System.out.println(input);
+            if (input.equals("list")) {
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println((i + 1) + ". " + tasks.get(i));
+                }
+            } else {
+                tasks.add(input);
+                System.out.println("added: " + input);
+            }
             System.out.println(LINE);
         }
         scanner.close();
