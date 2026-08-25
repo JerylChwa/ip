@@ -97,4 +97,12 @@ public class Ui {
         System.out.println("  " + task);
         System.out.println("Now you have " + totalCount + " tasks in the list.");
     }
+
+    /** Prints the tasks matching a search keyword, numbered from 1. */
+    public void showMatchingTasks(List<Task> matches) {
+        System.out.println("Here are the matching tasks in your list:");
+        for (int i = 0; i < matches.size(); i++) {
+            System.out.println((i + 1) + "." + matches.get(i));
+        }
+    }
 }
