@@ -9,6 +9,7 @@ import pdd.ui.Ui;
 public class EventCommand extends Command {
     private final Event event;
 
+    /** Creates a command that will add the given already-parsed event to the task list. */
     public EventCommand(Event event) {
         this.event = event;
     }

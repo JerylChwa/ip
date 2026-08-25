@@ -14,10 +14,12 @@ import pdd.PDDException;
 public class TaskList {
     private final List<Task> tasks;
 
+    /** Wraps the given list of tasks, e.g. one just loaded from {@code Storage}. */
     public TaskList(List<Task> tasks) {
         this.tasks = tasks;
     }
 
+    /** Returns the number of tasks in the list. */
     public int size() {
         return tasks.size();
     }
@@ -45,14 +47,17 @@ public class TaskList {
         return number - 1;
     }
 
+    /** Returns the task at the given 0-based index. */
     public Task get(int index) {
         return tasks.get(index);
     }
 
+    /** Appends the given task to the end of the list. */
     public void add(Task task) {
         tasks.add(task);
     }
 
+    /** Removes and returns the task at the given 0-based index. */
     public Task delete(int index) {
         return tasks.remove(index);
     }

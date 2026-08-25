@@ -10,6 +10,7 @@ import pdd.ui.Ui;
 public class OnCommand extends Command {
     private final LocalDate date;
 
+    /** Creates a command that will list the tasks occurring on the given already-parsed date. */
     public OnCommand(LocalDate date) {
         this.date = date;
     }

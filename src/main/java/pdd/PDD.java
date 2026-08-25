@@ -16,12 +16,14 @@ public class PDD {
     private final TaskList tasks;
     private final Ui ui;
 
+    /** Creates the chatbot, loading any previously saved tasks from the given save file. */
     public PDD(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
         tasks = new TaskList(storage.load());
     }
 
+    /** Runs the chatbot's main loop until the user issues an exit command. */
     public void run() {
         ui.showWelcome();
         boolean isExit = false;
@@ -40,6 +42,7 @@ public class PDD {
         }
     }
 
+    /** Starts the chatbot, saving/loading tasks at {@code ./data/pdd.txt}. */
     public static void main(String[] args) {
         new PDD("./data/pdd.txt").run();
     }

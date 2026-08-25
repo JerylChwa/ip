@@ -2,9 +2,11 @@ package pdd.task;
 
 import java.time.LocalDate;
 
+/** A task that needs to be done by a specific date. */
 public class Deadline extends Task {
     protected LocalDate by;
 
+    /** Creates a not-done deadline with the given description and due date. */
     public Deadline(String description, LocalDate by) {
         super(description);
         this.by = by;
@@ -20,6 +22,7 @@ public class Deadline extends Task {
         return "D | " + getStatusValue() + " | " + description + " | " + by;
     }
 
+    /** {@inheritDoc} A deadline occurs on the date it's due. */
     @Override
     public boolean occursOn(LocalDate date) {
         return by.equals(date);

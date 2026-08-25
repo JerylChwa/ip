@@ -1,6 +1,8 @@
 package pdd.task;
 
+/** A task with no date/time attached, other than its description. */
 public class Todo extends Task {
+    /** Creates a not-done todo with the given description. */
     public Todo(String description) {
         super(description);
     }

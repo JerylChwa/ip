@@ -3,6 +3,12 @@ package pdd.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * A single to-do item in the task list. Concrete subclasses ({@link Todo},
+ * {@link Deadline}, {@link Event}) add whatever date/time information their
+ * kind of task needs; this class owns the description and done/not-done
+ * status shared by all of them.
+ */
 public abstract class Task {
     /** Shared display format for task dates, e.g. "Oct 15 2019". Public: used by pdd.ui.Ui as well. */
     public static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
@@ -10,11 +16,13 @@ public abstract class Task {
     protected String description;
     protected boolean isDone;
 
+    /** Creates a not-done task with the given description. */
     public Task(String description) {
         this.description = description;
         this.isDone = false;
     }
 
+    /** Returns the single-character status icon shown in the task list: {@code X} if done, a space otherwise. */
     public String getStatusIcon() {
         return (isDone ? "X" : " "); // mark done task with X
     }
@@ -24,14 +32,17 @@ public abstract class Task {
         return isDone ? 1 : 0;
     }
 
+    /** Returns this task's description. */
     public String getDescription() {
         return description;
     }
 
+    /** Marks this task as done. */
     public void markAsDone() {
         isDone = true;
     }
 
+    /** Marks this task as not done. */
     public void markAsNotDone() {
         isDone = false;
     }
