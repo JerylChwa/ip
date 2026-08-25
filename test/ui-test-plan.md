@@ -5,11 +5,15 @@ is a full chatbot session: a sequence of commands fed to the program's
 standard input (one per line, always ending with `bye`), and the exact
 console output the program is expected to produce for that session.
 
-The program's entry point is `src/main/java/PDD.java` (class `PDD`), with
-supporting classes `Task.java`, `Todo.java`, `Deadline.java`, `Event.java`,
-`Storage.java` in the same directory. `Storage` persists the task list to
-`./data/pdd.txt` after every mutating command and reloads it on startup —
-see the "Data file cleanup" note below for how this affects test isolation.
+The program's entry point is `src/main/java/PDD.java` (class `PDD`), which
+wires together `Ui` (console I/O), `Storage` (loading/saving
+`./data/pdd.txt`), `TaskList` (the in-memory task list) and `Parser`
+(turns a raw input line into a `Command` object — `ListCommand`,
+`MarkCommand`, `UnmarkCommand`, `DeleteCommand`, `TodoCommand`,
+`DeadlineCommand`, `EventCommand`, `OnCommand`, `ExitCommand` — one per
+command type). `Storage` persists the task list to `./data/pdd.txt` after
+every mutating command and reloads it on startup — see the "Data file
+cleanup" note below for how this affects test isolation.
 
 ## How a test case is structured
 
