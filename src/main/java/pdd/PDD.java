@@ -1,3 +1,11 @@
+package pdd;
+
+import pdd.command.Command;
+import pdd.parser.Parser;
+import pdd.storage.Storage;
+import pdd.task.TaskList;
+import pdd.ui.Ui;
+
 /**
  * Entry point for the PDD chatbot. Wires together the {@link Storage},
  * {@link TaskList} and {@link Ui} collaborators and runs the main

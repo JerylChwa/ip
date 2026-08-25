@@ -1,9 +1,11 @@
+package pdd.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public abstract class Task {
-    /** Shared display format for task dates, e.g. "Oct 15 2019". */
-    protected static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+    /** Shared display format for task dates, e.g. "Oct 15 2019". Public: used by pdd.ui.Ui as well. */
+    public static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     protected String description;
     protected boolean isDone;

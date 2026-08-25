@@ -5,9 +5,10 @@ description: Run this project's UI/console test suite for the PDD chatbot. Use w
 
 # test-ui
 
-Runs the console-based UI tests for this project's chatbot (`src/main/java/PDD.java`)
-against the test cases recorded in `test/ui-test-plan.md`, and reports a full
-transcript of the test session.
+Runs the console-based UI tests for this project's chatbot
+(`src/main/java/pdd/PDD.java`, package `pdd`) against the test cases
+recorded in `test/ui-test-plan.md`, and reports a full transcript of the
+test session.
 
 ## Test case format
 
@@ -28,9 +29,11 @@ each one (do not reuse state across test cases).
 1. Read `test/ui-test-plan.md` and parse out each `## TCn` section's Aim,
    Input, and Expected output blocks, in file order.
 
-2. Compile the program once, before running any test cases:
+2. Compile the program once, before running any test cases. The source
+   is split across packages under `src/main/java/pdd/`, so compile
+   recursively rather than with a flat `*.java` glob:
    ```
-   javac -d <tmp-build-dir> src/main/java/*.java
+   javac -d <tmp-build-dir> $(find src/main/java -name "*.java")
    ```
    If compilation fails, stop immediately and report the compiler error —
    do not attempt to run any test cases.
@@ -42,9 +45,11 @@ each one (do not reuse state across test cases).
       file from a previous test case would leak tasks into this one and
       break the "independent full session" assumption each test case
       relies on.
-   b. Run the program, piping the test case's Input lines to stdin:
+   b. Run the program, piping the test case's Input lines to stdin. The
+      entry point class is `pdd.PDD` (package-qualified, since PDD now
+      lives in package `pdd`):
       ```
-      java -cp <tmp-build-dir> PDD
+      java -cp <tmp-build-dir> pdd.PDD
       ```
    c. Capture the actual stdout produced.
    d. Compare the actual output to the Expected output **exactly**

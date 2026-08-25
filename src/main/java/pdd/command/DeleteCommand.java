@@ -1,3 +1,11 @@
+package pdd.command;
+
+import pdd.PDDException;
+import pdd.storage.Storage;
+import pdd.task.Task;
+import pdd.task.TaskList;
+import pdd.ui.Ui;
+
 /** Removes the task at the given 1-based position from the list. */
 public class DeleteCommand extends Command {
     private final String taskNumberArg;

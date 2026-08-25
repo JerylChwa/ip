@@ -1,3 +1,10 @@
+package pdd.command;
+
+import pdd.storage.Storage;
+import pdd.task.Event;
+import pdd.task.TaskList;
+import pdd.ui.Ui;
+
 /** Adds an already-parsed {@link Event} to the task list. */
 public class EventCommand extends Command {
     private final Event event;
