@@ -1,10 +1,21 @@
+/**
+ * Entry point for the PDD chatbot. Wires together the {@link Storage},
+ * {@link TaskList} and {@link Ui} collaborators and runs the main
+ * read-command / dispatch / respond loop.
+ */
 public class PDD {
-    public static void main(String[] args) {
-        Ui ui = new Ui();
-        ui.showWelcome();
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
 
-        Storage storage = new Storage("./data/pdd.txt");
-        TaskList tasks = new TaskList(storage.load());
+    public PDD(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        tasks = new TaskList(storage.load());
+    }
+
+    public void run() {
+        ui.showWelcome();
         while (true) {
             String input = ui.readCommand();
             if (input.equals("bye")) {
@@ -46,13 +57,13 @@ public class PDD {
                     break;
                 }
                 case TODO:
-                    addTask(tasks, Parser.parseTodo(commandArgs), storage, ui);
+                    addTask(Parser.parseTodo(commandArgs));
                     break;
                 case DEADLINE:
-                    addTask(tasks, Parser.parseDeadline(commandArgs), storage, ui);
+                    addTask(Parser.parseDeadline(commandArgs));
                     break;
                 case EVENT:
-                    addTask(tasks, Parser.parseEvent(commandArgs), storage, ui);
+                    addTask(Parser.parseEvent(commandArgs));
                     break;
                 case ON:
                     ui.showTasksOn(Parser.parseOnDate(commandArgs), tasks.getTasks());
@@ -67,9 +78,13 @@ public class PDD {
         }
     }
 
-    private static void addTask(TaskList tasks, Task task, Storage storage, Ui ui) {
+    private void addTask(Task task) {
         tasks.add(task);
         storage.save(tasks.getTasks());
         ui.showAdded(task, tasks.size());
+    }
+
+    public static void main(String[] args) {
+        new PDD("./data/pdd.txt").run();
     }
 }
