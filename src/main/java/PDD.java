@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -5,7 +7,7 @@ import java.util.Scanner;
 public class PDD {
     private static final String LINE = "____________________________________________________________";
 
-    private enum Command { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT }
+    private enum Command { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON }
 
     public static void main(String[] args) {
         String banner = " ____  ____  ____  \n"
@@ -89,9 +91,10 @@ public class PDD {
                     String[] parts = commandArgs.split(" /by ", 2);
                     if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
                         throw new PDDException("OOPS!!! A deadline needs a description and a '/by' "
-                                + "date/time, e.g. deadline return book /by Sunday");
+                                + "date, e.g. deadline return book /by 2019-10-15");
                     }
-                    addTask(tasks, new Deadline(parts[0].trim(), parts[1].trim()), storage);
+                    LocalDate by = parseDate(parts[1].trim());
+                    addTask(tasks, new Deadline(parts[0].trim(), by), storage);
                     break;
                 }
                 case EVENT: {
@@ -100,15 +103,31 @@ public class PDD {
                     }
                     String[] parts = commandArgs.split(" /from ", 2);
                     if (parts.length < 2 || parts[0].trim().isEmpty()) {
-                        throw new PDDException("OOPS!!! An event needs a description, a '/from' and a "
-                                + "'/to' time, e.g. event meeting /from Mon 2pm /to 4pm");
+                        throw new PDDException("OOPS!!! An event needs a description, a '/from' date and a "
+                                + "'/to' time, e.g. event meeting /from 2019-10-15 /to 4pm");
                     }
                     String[] fromTo = parts[1].split(" /to ", 2);
                     if (fromTo.length < 2 || fromTo[0].trim().isEmpty() || fromTo[1].trim().isEmpty()) {
-                        throw new PDDException("OOPS!!! An event needs a description, a '/from' and a "
-                                + "'/to' time, e.g. event meeting /from Mon 2pm /to 4pm");
+                        throw new PDDException("OOPS!!! An event needs a description, a '/from' date and a "
+                                + "'/to' time, e.g. event meeting /from 2019-10-15 /to 4pm");
                     }
-                    addTask(tasks, new Event(parts[0].trim(), fromTo[0].trim(), fromTo[1].trim()), storage);
+                    LocalDate from = parseDate(fromTo[0].trim());
+                    addTask(tasks, new Event(parts[0].trim(), from, fromTo[1].trim()), storage);
+                    break;
+                }
+                case ON: {
+                    if (commandArgs.isEmpty()) {
+                        throw new PDDException("OOPS!!! Please provide a date, e.g. on 2019-10-15");
+                    }
+                    LocalDate date = parseDate(commandArgs);
+                    System.out.println("Here are the tasks on " + date.format(Task.DISPLAY_DATE_FORMAT) + ":");
+                    int count = 0;
+                    for (Task task : tasks) {
+                        if (task.occursOn(date)) {
+                            count++;
+                            System.out.println(count + "." + task);
+                        }
+                    }
                     break;
                 }
                 default:
@@ -120,6 +139,14 @@ public class PDD {
             System.out.println(LINE);
         }
         scanner.close();
+    }
+
+    private static LocalDate parseDate(String text) throws PDDException {
+        try {
+            return LocalDate.parse(text.trim());
+        } catch (DateTimeParseException e) {
+            throw new PDDException("OOPS!!! Please enter the date in yyyy-MM-dd format, e.g. 2019-10-15.");
+        }
     }
 
     private static int parseTaskIndex(String args, int taskCount) throws PDDException {

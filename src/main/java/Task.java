@@ -1,4 +1,10 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public abstract class Task {
+    /** Shared display format for task dates, e.g. "Oct 15 2019". */
+    protected static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
+
     protected String description;
     protected boolean isDone;
 
@@ -35,4 +41,9 @@ public abstract class Task {
 
     /** Serializes this task to a single line in the save-file format. */
     public abstract String toFileFormat();
+
+    /** Returns whether this task occurs on the given date. Tasks without a date never match. */
+    public boolean occursOn(LocalDate date) {
+        return false;
+    }
 }
