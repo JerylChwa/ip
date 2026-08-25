@@ -29,12 +29,12 @@ each one (do not reuse state across test cases).
 1. Read `test/ui-test-plan.md` and parse out each `## TCn` section's Aim,
    Input, and Expected output blocks, in file order.
 
-2. Compile the program once, before running any test cases. The source
-   is split across packages under `src/main/java/pdd/`, so compile
-   recursively rather than with a flat `*.java` glob:
+2. Compile the program once, before running any test cases, using the
+   Gradle wrapper (the project has used Gradle since A-Gradle):
    ```
-   javac -d <tmp-build-dir> $(find src/main/java -name "*.java")
+   ./gradlew compileJava
    ```
+   This places compiled classes under `build/classes/java/main`.
    If compilation fails, stop immediately and report the compiler error —
    do not attempt to run any test cases.
 
@@ -45,11 +45,12 @@ each one (do not reuse state across test cases).
       file from a previous test case would leak tasks into this one and
       break the "independent full session" assumption each test case
       relies on.
-   b. Run the program, piping the test case's Input lines to stdin. The
-      entry point class is `pdd.PDD` (package-qualified, since PDD now
-      lives in package `pdd`):
+   b. Run the program, piping the test case's Input lines to stdin,
+      directly against the classes Gradle just compiled (much faster
+      per test case than invoking `./gradlew run` each time, which pays
+      Gradle's own startup cost on every invocation):
       ```
-      java -cp <tmp-build-dir> pdd.PDD
+      java -cp build/classes/java/main pdd.PDD
       ```
    c. Capture the actual stdout produced.
    d. Compare the actual output to the Expected output **exactly**
@@ -75,12 +76,10 @@ each one (do not reuse state across test cases).
 
 ## Notes
 
-- The program has no external dependencies or build tool config in this
-  project (no `build.gradle` present as of this writing) — compile and run
-  directly with `javac`/`java` as shown above. If a build tool is later
-  added to the project, prefer its equivalent compile/run commands instead.
-- Use a scratch/temp directory for compiled `.class` output so it doesn't
-  pollute the working tree.
+- The project builds with Gradle (`./gradlew`, `build.gradle`) as of
+  A-Gradle. Compile with the wrapper as shown above rather than a raw
+  `javac` invocation, so this stays in sync with however `build.gradle`
+  evolves (dependencies, source sets, etc).
 - Comparison must be exact — do not "fuzzy match" or ignore trailing
   whitespace differences, since the divider lines and indentation are part
   of the intended UI contract.
