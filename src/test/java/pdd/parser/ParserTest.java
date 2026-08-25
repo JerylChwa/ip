@@ -80,6 +80,22 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_findCommand_returnsFindCommandAndDoesNotMutateList() throws PDDException {
+        TaskList tasks = newTaskList();
+        tasks.add(new pdd.task.Todo("read book"));
+        Command c = Parser.parse("find book");
+        assertTrue(c instanceof pdd.command.FindCommand);
+        c.execute(tasks, new Ui(), newStorage());
+        assertEquals(1, tasks.size());
+    }
+
+    @Test
+    public void parse_emptyFindKeyword_throwsException() {
+        PDDException e = assertThrows(PDDException.class, () -> Parser.parse("find"));
+        assertEquals("OOPS!!! Please provide a keyword to search for, e.g. find book", e.getMessage());
+    }
+
+    @Test
     public void parse_byeCommand_returnsCommandThatSignalsExit() throws PDDException {
         Command c = Parser.parse("bye");
         assertTrue(c.isExit());

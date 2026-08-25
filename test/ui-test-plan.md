@@ -644,6 +644,97 @@ ____________________________________________________________
 
 ---
 
+## TC12: Find tasks by keyword
+
+**Aim**: Verify the `find <keyword>` command lists only the tasks whose
+description contains the keyword (case-insensitive), numbered from 1,
+with an empty list when nothing matches, and the expected error when no
+keyword is given.
+
+**Input**:
+```
+todo read book
+deadline return book /by 2019-12-01
+todo join sports club
+mark 1
+mark 2
+find book
+find BOOK
+find sports
+find xyz
+find
+list
+bye
+```
+
+**Expected output**:
+```
+____________________________________________________________
+ ____  ____  ____  
+|  _ \|  _ \|  _ \ 
+| |_) | | | | | | |
+|  __/| |_| | |_| |
+|_|   |____/|____/ 
+
+Hello! I'm PDD.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Dec 01 2019)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] join sports club
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Nice! I've marked this task as done:
+  [T][X] read book
+____________________________________________________________
+____________________________________________________________
+Nice! I've marked this task as done:
+  [D][X] return book (by: Dec 01 2019)
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read book
+2.[D][X] return book (by: Dec 01 2019)
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read book
+2.[D][X] return book (by: Dec 01 2019)
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] join sports club
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Please provide a keyword to search for, e.g. find book
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][X] read book
+2.[D][X] return book (by: Dec 01 2019)
+3.[T][ ] join sports club
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+---
+
 ## Adding new test cases
 
 Append a new `## TCn: <title>` section following the same structure (Aim,

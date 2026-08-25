@@ -58,4 +58,26 @@ public class TaskListTest {
         assertEquals(1, tasks.size());
         assertEquals(second, tasks.get(0));
     }
+
+    @Test
+    public void findMatching_keywordInSomeDescriptions_returnsOnlyMatches() {
+        Todo readBook = new Todo("read book");
+        Todo returnBook = new Todo("return book");
+        Todo joinClub = new Todo("join sports club");
+        TaskList tasks = new TaskList(new ArrayList<>(List.of(readBook, returnBook, joinClub)));
+        assertEquals(List.of(readBook, returnBook), tasks.findMatching("book"));
+    }
+
+    @Test
+    public void findMatching_differentCase_stillMatches() {
+        Todo readBook = new Todo("read book");
+        TaskList tasks = new TaskList(new ArrayList<>(List.of(readBook)));
+        assertEquals(List.of(readBook), tasks.findMatching("BOOK"));
+    }
+
+    @Test
+    public void findMatching_noDescriptionContainsKeyword_returnsEmptyList() {
+        TaskList tasks = new TaskList(new ArrayList<>(List.of(new Todo("read book"))));
+        assertEquals(List.of(), tasks.findMatching("xyz"));
+    }
 }

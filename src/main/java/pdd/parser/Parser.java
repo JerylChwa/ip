@@ -9,6 +9,7 @@ import pdd.command.DeadlineCommand;
 import pdd.command.DeleteCommand;
 import pdd.command.EventCommand;
 import pdd.command.ExitCommand;
+import pdd.command.FindCommand;
 import pdd.command.ListCommand;
 import pdd.command.MarkCommand;
 import pdd.command.OnCommand;
@@ -27,7 +28,7 @@ import pdd.task.Todo;
  */
 public class Parser {
     /** The kind of command a user input line names. */
-    private enum CommandType { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON, BYE }
+    private enum CommandType { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON, FIND, BYE }
 
     /**
      * Parses one full line of user input into a ready-to-run {@link Command}.
@@ -54,6 +55,8 @@ public class Parser {
             return new EventCommand(parseEvent(commandArgs));
         case ON:
             return new OnCommand(parseOnDate(commandArgs));
+        case FIND:
+            return new FindCommand(parseFindKeyword(commandArgs));
         case BYE:
             return new ExitCommand();
         default:
@@ -132,6 +135,14 @@ public class Parser {
             throw new PDDException("OOPS!!! Please provide a date, e.g. on 2019-10-15");
         }
         return parseDate(commandArgs);
+    }
+
+    /** Parses the arguments of a {@code find} command into the keyword to search for. */
+    private static String parseFindKeyword(String commandArgs) throws PDDException {
+        if (commandArgs.isEmpty()) {
+            throw new PDDException("OOPS!!! Please provide a keyword to search for, e.g. find book");
+        }
+        return commandArgs;
     }
 
     private static LocalDate parseDate(String text) throws PDDException {
