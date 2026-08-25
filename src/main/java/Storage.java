@@ -3,6 +3,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +15,11 @@ import java.util.List;
  * The save file uses one line per task, in the format:
  * <pre>
  * T | 1 | read book
- * D | 0 | return book | June 6th
- * E | 0 | project meeting | Aug 6th 2-4pm
+ * D | 0 | return book | 2019-06-06
+ * E | 0 | project meeting | 2019-08-06 | 2-4pm
  * </pre>
- * where the second column is 1 for a done task and 0 otherwise.
+ * where the second column is 1 for a done task and 0 otherwise, and
+ * deadline/event dates are stored in ISO {@code yyyy-MM-dd} format.
  */
 public class Storage {
     private final Path filePath;
@@ -94,13 +97,13 @@ public class Storage {
             if (parts.length != 4) {
                 throw new PDDException("wrong number of fields for a deadline");
             }
-            task = new Deadline(description, parts[3]);
+            task = new Deadline(description, parseIsoDate(parts[3]));
             break;
         case "E":
             if (parts.length != 5) {
                 throw new PDDException("wrong number of fields for an event");
             }
-            task = new Event(description, parts[3], parts[4]);
+            task = new Event(description, parseIsoDate(parts[3]), parts[4]);
             break;
         default:
             throw new PDDException("unknown task type: " + type);
@@ -109,6 +112,14 @@ public class Storage {
             task.markAsDone();
         }
         return task;
+    }
+
+    private LocalDate parseIsoDate(String text) throws PDDException {
+        try {
+            return LocalDate.parse(text);
+        } catch (DateTimeParseException e) {
+            throw new PDDException("invalid date: " + text);
+        }
     }
 
     private boolean parseStatus(String status) throws PDDException {

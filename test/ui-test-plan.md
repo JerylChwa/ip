@@ -67,8 +67,8 @@ correct type tag and are echoed correctly, and that `list` shows them with
 **Input**:
 ```
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2019-12-01
+event project meeting /from 2019-12-02 /to 4pm
 list
 bye
 ```
@@ -92,19 +92,19 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Dec 01 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+  [E][ ] project meeting (from: Dec 02 2019 to: 4pm)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+2.[D][ ] return book (by: Dec 01 2019)
+3.[E][ ] project meeting (from: Dec 02 2019 to: 4pm)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -168,10 +168,10 @@ ____________________________________________________________
 
 ---
 
-## TC4: Deadline with an unusual date string
+## TC4: Deadline with an invalid date string
 
-**Aim**: Verify that the text after `/by` is stored and echoed verbatim,
-with no parsing/validation of the date/time string.
+**Aim**: Verify that `/by` text which isn't a valid `yyyy-MM-dd` date is
+rejected with a clear error message, and no task is added.
 
 **Input**:
 ```
@@ -193,13 +193,10 @@ Hello! I'm PDD.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
-  [D][ ] do homework (by: no idea :-p)
-Now you have 1 tasks in the list.
+OOPS!!! Please enter the date in yyyy-MM-dd format, e.g. 2019-10-15.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
-1.[D][ ] do homework (by: no idea :-p)
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -324,10 +321,10 @@ Hello! I'm PDD.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! A deadline needs a description and a '/by' date/time, e.g. deadline return book /by Sunday
+OOPS!!! A deadline needs a description and a '/by' date, e.g. deadline return book /by 2019-10-15
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! An event needs a description, a '/from' and a '/to' time, e.g. event meeting /from Mon 2pm /to 4pm
+OOPS!!! An event needs a description, a '/from' date and a '/to' time, e.g. event meeting /from 2019-10-15 /to 4pm
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -406,8 +403,8 @@ validation as `mark`/`unmark` (missing, non-numeric, or out-of-range index).
 **Input**:
 ```
 todo read book
-deadline return book /by June 6th
-event project meeting /from Aug 6th 2pm /to 4pm
+deadline return book /by 2019-12-01
+event project meeting /from 2019-12-02 /to 4pm
 todo join sports club
 todo borrow book
 mark 1
@@ -441,12 +438,12 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Dec 01 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][ ] project meeting (from: Dec 02 2019 to: 4pm)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -465,7 +462,7 @@ Nice! I've marked this task as done:
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
-  [D][X] return book (by: June 6th)
+  [D][X] return book (by: Dec 01 2019)
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
@@ -474,20 +471,20 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][X] return book (by: June 6th)
-3.[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+2.[D][X] return book (by: Dec 01 2019)
+3.[E][ ] project meeting (from: Dec 02 2019 to: 4pm)
 4.[T][X] join sports club
 5.[T][ ] borrow book
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
-  [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+  [E][ ] project meeting (from: Dec 02 2019 to: 4pm)
 Now you have 4 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
-2.[D][X] return book (by: June 6th)
+2.[D][X] return book (by: Dec 01 2019)
 3.[T][X] join sports club
 4.[T][ ] borrow book
 ____________________________________________________________
@@ -519,7 +516,7 @@ file cleanup" note above; that behavior is verified manually instead.)
 **Input**:
 ```
 todo read book
-deadline return book /by June 6th
+deadline return book /by 2019-12-01
 mark 1
 delete 2
 list
@@ -545,7 +542,7 @@ Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Dec 01 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -554,12 +551,85 @@ Nice! I've marked this task as done:
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this task:
-  [D][ ] return book (by: June 6th)
+  [D][ ] return book (by: Dec 01 2019)
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][X] read book
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+---
+
+## TC11: List tasks occurring on a specific date
+
+**Aim**: Verify the `on <date>` command lists every deadline/event whose
+date matches, in list order (a todo, having no date, is never matched);
+prints just the header with no items when nothing matches; and produces
+the expected errors for a missing or invalid date argument.
+
+**Input**:
+```
+todo read book
+deadline return book /by 2019-12-01
+event project meeting /from 2019-12-01 /to 4pm
+deadline pay bills /by 2019-12-02
+on 2019-12-01
+on 2019-12-03
+on
+on nonsense
+bye
+```
+
+**Expected output**:
+```
+____________________________________________________________
+ ____  ____  ____  
+|  _ \|  _ \|  _ \ 
+| |_) | | | | | | |
+|  __/| |_| | |_| |
+|_|   |____/|____/ 
+
+Hello! I'm PDD.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: Dec 01 2019)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] project meeting (from: Dec 01 2019 to: 4pm)
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] pay bills (by: Dec 02 2019)
+Now you have 4 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks on Dec 01 2019:
+1.[D][ ] return book (by: Dec 01 2019)
+2.[E][ ] project meeting (from: Dec 01 2019 to: 4pm)
+____________________________________________________________
+____________________________________________________________
+Here are the tasks on Dec 03 2019:
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Please provide a date, e.g. on 2019-10-15
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Please enter the date in yyyy-MM-dd format, e.g. 2019-10-15.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
