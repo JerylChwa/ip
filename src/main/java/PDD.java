@@ -1,6 +1,5 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 public class PDD {
     private enum Command { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON }
@@ -10,7 +9,7 @@ public class PDD {
         ui.showWelcome();
 
         Storage storage = new Storage("./data/pdd.txt");
-        List<Task> tasks = storage.load();
+        TaskList tasks = new TaskList(storage.load());
         while (true) {
             String input = ui.readCommand();
             if (input.equals("bye")) {
@@ -32,28 +31,28 @@ public class PDD {
                 }
                 switch (cmd) {
                 case LIST:
-                    ui.showTaskList(tasks);
+                    ui.showTaskList(tasks.getTasks());
                     break;
                 case MARK: {
-                    int index = parseTaskIndex(commandArgs, tasks.size());
+                    int index = tasks.toIndex(commandArgs);
                     Task task = tasks.get(index);
                     task.markAsDone();
-                    storage.save(tasks);
+                    storage.save(tasks.getTasks());
                     ui.showMarked(task);
                     break;
                 }
                 case UNMARK: {
-                    int index = parseTaskIndex(commandArgs, tasks.size());
+                    int index = tasks.toIndex(commandArgs);
                     Task task = tasks.get(index);
                     task.markAsNotDone();
-                    storage.save(tasks);
+                    storage.save(tasks.getTasks());
                     ui.showUnmarked(task);
                     break;
                 }
                 case DELETE: {
-                    int index = parseTaskIndex(commandArgs, tasks.size());
-                    Task removed = tasks.remove(index);
-                    storage.save(tasks);
+                    int index = tasks.toIndex(commandArgs);
+                    Task removed = tasks.delete(index);
+                    storage.save(tasks.getTasks());
                     ui.showDeleted(removed, tasks.size());
                     break;
                 }
@@ -99,7 +98,7 @@ public class PDD {
                         throw new PDDException("OOPS!!! Please provide a date, e.g. on 2019-10-15");
                     }
                     LocalDate date = parseDate(commandArgs);
-                    ui.showTasksOn(date, tasks);
+                    ui.showTasksOn(date, tasks.getTasks());
                     break;
                 }
                 default:
@@ -120,23 +119,9 @@ public class PDD {
         }
     }
 
-    private static int parseTaskIndex(String args, int taskCount) throws PDDException {
-        int number;
-        try {
-            number = Integer.parseInt(args);
-        } catch (NumberFormatException e) {
-            throw new PDDException("OOPS!!! Please provide a valid task number, e.g. mark 2");
-        }
-        if (number < 1 || number > taskCount) {
-            throw new PDDException("OOPS!!! Task number " + number + " does not exist. "
-                    + "You have " + taskCount + " task(s) in the list.");
-        }
-        return number - 1;
-    }
-
-    private static void addTask(List<Task> tasks, Task task, Storage storage, Ui ui) {
+    private static void addTask(TaskList tasks, Task task, Storage storage, Ui ui) {
         tasks.add(task);
-        storage.save(tasks);
+        storage.save(tasks.getTasks());
         ui.showAdded(task, tasks.size());
     }
 }
