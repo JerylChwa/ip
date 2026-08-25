@@ -1,6 +1,13 @@
+package pdd.command;
+
+import pdd.PDDException;
+import pdd.storage.Storage;
+import pdd.task.TaskList;
+import pdd.ui.Ui;
+
 /**
  * Represents one user command as an object: the data it needs (parsed by
- * {@link Parser}) plus the behavior of carrying it out. This lets
+ * {@code Parser}) plus the behavior of carrying it out. This lets
  * {@code PDD}'s main loop stay a single generic
  * "parse, execute, check isExit" cycle instead of a per-command switch.
  */

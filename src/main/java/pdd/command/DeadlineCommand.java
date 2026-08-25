@@ -1,3 +1,10 @@
+package pdd.command;
+
+import pdd.storage.Storage;
+import pdd.task.Deadline;
+import pdd.task.TaskList;
+import pdd.ui.Ui;
+
 /** Adds an already-parsed {@link Deadline} to the task list. */
 public class DeadlineCommand extends Command {
     private final Deadline deadline;

@@ -1,6 +1,10 @@
+package pdd.ui;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
+
+import pdd.task.Task;
 
 /**
  * Handles all interaction with the user: printing the greeting/goodbye
