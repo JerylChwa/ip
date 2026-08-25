@@ -61,7 +61,10 @@ public class Parser {
         }
     }
 
-    /** Returns the command word (before the first space), e.g. "deadline" from "deadline return book /by ...". */
+    /**
+     * Returns the command word (before the first space), e.g. "deadline"
+     * from "deadline return book /by ...".
+     */
     private static String getCommandWord(String fullCommand) {
         int spaceIndex = fullCommand.indexOf(' ');
         return spaceIndex == -1 ? fullCommand : fullCommand.substring(0, spaceIndex);
