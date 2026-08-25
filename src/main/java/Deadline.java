@@ -10,4 +10,9 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by + ")";
     }
+
+    /** Serializes this task to a single line in the save-file format. */
+    public String toFileFormat() {
+        return "D | " + getStatusValue() + " | " + description + " | " + by;
+    }
 }

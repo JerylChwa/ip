@@ -1,4 +1,4 @@
-public class Task {
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -9,6 +9,11 @@ public class Task {
 
     public String getStatusIcon() {
         return (isDone ? "X" : " "); // mark done task with X
+    }
+
+    /** Returns 1 if this task is done, 0 otherwise, for use in the save-file format. */
+    protected int getStatusValue() {
+        return isDone ? 1 : 0;
     }
 
     public String getDescription() {
@@ -27,4 +32,7 @@ public class Task {
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;
     }
+
+    /** Serializes this task to a single line in the save-file format. */
+    public abstract String toFileFormat();
 }
