@@ -36,18 +36,24 @@ each one (do not reuse state across test cases).
    do not attempt to run any test cases.
 
 3. For each test case, in order:
-   a. Run the program, piping the test case's Input lines to stdin:
+   a. Delete the `./data` directory at the project root, if it exists,
+      before running the test case. The chatbot persists tasks to
+      `./data/pdd.txt` and reloads them on startup, so a leftover save
+      file from a previous test case would leak tasks into this one and
+      break the "independent full session" assumption each test case
+      relies on.
+   b. Run the program, piping the test case's Input lines to stdin:
       ```
       java -cp <tmp-build-dir> PDD
       ```
-   b. Capture the actual stdout produced.
-   c. Compare the actual output to the Expected output **exactly**
+   c. Capture the actual stdout produced.
+   d. Compare the actual output to the Expected output **exactly**
       (including whitespace and line breaks).
-   d. Record this test case's console session (the input lines interleaved
+   e. Record this test case's console session (the input lines interleaved
       with the actual output, as a human would see them typed into the
       running program) — keep this for the final transcript regardless of
       pass/fail.
-   e. If the actual output does not match the expected output:
+   f. If the actual output does not match the expected output:
       - Stop running any further test cases immediately.
       - Report which test case failed (its number, title, and Aim).
       - Show the actual output and the expected output for that test case

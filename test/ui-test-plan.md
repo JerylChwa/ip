@@ -6,14 +6,26 @@ standard input (one per line, always ending with `bye`), and the exact
 console output the program is expected to produce for that session.
 
 The program's entry point is `src/main/java/PDD.java` (class `PDD`), with
-supporting classes `Task.java`, `Todo.java`, `Deadline.java`, `Event.java`
-in the same directory.
+supporting classes `Task.java`, `Todo.java`, `Deadline.java`, `Event.java`,
+`Storage.java` in the same directory. `Storage` persists the task list to
+`./data/pdd.txt` after every mutating command and reloads it on startup —
+see the "Data file cleanup" note below for how this affects test isolation.
 
 ## How a test case is structured
 
 - **Aim**: what behavior this test case is checking.
 - **Input**: the exact lines sent to the program's stdin, in order.
 - **Expected output**: the exact stdout the program must produce.
+
+## Data file cleanup
+
+Since Level 7, the chatbot saves tasks to `./data/pdd.txt` (relative to the
+project root) after every mutating command, and reloads them on startup.
+Because every test case is run from the same working directory, the
+`./data` directory must be deleted **before each test case** (not just once
+before the whole suite) — otherwise a later test case would start with
+tasks left over from an earlier one, breaking the "independent full
+session" contract each test case relies on.
 
 ---
 
@@ -487,6 +499,67 @@ OOPS!!! Please provide a valid task number, e.g. mark 2
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! Task number 9 does not exist. You have 4 task(s) in the list.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+---
+
+## TC10: Session behavior is unchanged with the save-to-disk layer active
+
+**Aim**: Verify that adding a todo/deadline/event, marking a task, and
+deleting a task all still produce their normal confirmation output and
+console session shape now that every one of those commands also writes to
+`./data/pdd.txt` in the background. (Reloading a save file across a
+restart isn't exercised by this single-process harness — see the "Data
+file cleanup" note above; that behavior is verified manually instead.)
+
+**Input**:
+```
+todo read book
+deadline return book /by June 6th
+mark 1
+delete 2
+list
+bye
+```
+
+**Expected output**:
+```
+____________________________________________________________
+ ____  ____  ____  
+|  _ \|  _ \|  _ \ 
+| |_) | | | | | | |
+|  __/| |_| | |_| |
+|_|   |____/|____/ 
+
+Hello! I'm PDD.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] return book (by: June 6th)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Nice! I've marked this task as done:
+  [T][X] read book
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [D][ ] return book (by: June 6th)
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][X] read book
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

@@ -20,7 +20,8 @@ public class PDD {
         System.out.println("What can I do for you?");
         System.out.println(LINE);
 
-        List<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage("./data/pdd.txt");
+        List<Task> tasks = storage.load();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
@@ -52,6 +53,7 @@ public class PDD {
                     int index = parseTaskIndex(commandArgs, tasks.size());
                     Task task = tasks.get(index);
                     task.markAsDone();
+                    storage.save(tasks);
                     System.out.println("Nice! I've marked this task as done:");
                     System.out.println("  " + task);
                     break;
@@ -60,6 +62,7 @@ public class PDD {
                     int index = parseTaskIndex(commandArgs, tasks.size());
                     Task task = tasks.get(index);
                     task.markAsNotDone();
+                    storage.save(tasks);
                     System.out.println("OK, I've marked this task as not done yet:");
                     System.out.println("  " + task);
                     break;
@@ -67,6 +70,7 @@ public class PDD {
                 case DELETE: {
                     int index = parseTaskIndex(commandArgs, tasks.size());
                     Task removed = tasks.remove(index);
+                    storage.save(tasks);
                     System.out.println("Noted. I've removed this task:");
                     System.out.println("  " + removed);
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -76,7 +80,7 @@ public class PDD {
                     if (commandArgs.isEmpty()) {
                         throw new PDDException("OOPS!!! The description of a todo cannot be empty.");
                     }
-                    addTask(tasks, new Todo(commandArgs));
+                    addTask(tasks, new Todo(commandArgs), storage);
                     break;
                 case DEADLINE: {
                     if (commandArgs.isEmpty()) {
@@ -87,7 +91,7 @@ public class PDD {
                         throw new PDDException("OOPS!!! A deadline needs a description and a '/by' "
                                 + "date/time, e.g. deadline return book /by Sunday");
                     }
-                    addTask(tasks, new Deadline(parts[0].trim(), parts[1].trim()));
+                    addTask(tasks, new Deadline(parts[0].trim(), parts[1].trim()), storage);
                     break;
                 }
                 case EVENT: {
@@ -104,7 +108,7 @@ public class PDD {
                         throw new PDDException("OOPS!!! An event needs a description, a '/from' and a "
                                 + "'/to' time, e.g. event meeting /from Mon 2pm /to 4pm");
                     }
-                    addTask(tasks, new Event(parts[0].trim(), fromTo[0].trim(), fromTo[1].trim()));
+                    addTask(tasks, new Event(parts[0].trim(), fromTo[0].trim(), fromTo[1].trim()), storage);
                     break;
                 }
                 default:
@@ -132,8 +136,9 @@ public class PDD {
         return number - 1;
     }
 
-    private static void addTask(List<Task> tasks, Task task) {
+    private static void addTask(List<Task> tasks, Task task, Storage storage) {
         tasks.add(task);
+        storage.save(tasks);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
