@@ -39,6 +39,8 @@ editing existing code.
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
+All commit messages and branch names in this project must follow the
+`seedu-git-standard` skill.
 
 ## UI testing
 
