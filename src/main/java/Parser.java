@@ -10,22 +10,54 @@ import java.time.format.DateTimeParseException;
  */
 public class Parser {
     /** The kind of command a user input line names. */
-    public enum CommandType { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON }
+    private enum CommandType { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON, BYE }
+
+    /**
+     * Parses one full line of user input into a ready-to-run {@link Command}.
+     * Throws {@link PDDException} (with a user-facing message) if the input
+     * isn't a recognized command or its arguments are invalid.
+     */
+    public static Command parse(String fullCommand) throws PDDException {
+        String commandWord = getCommandWord(fullCommand);
+        String commandArgs = getCommandArgs(fullCommand);
+        switch (parseCommandType(commandWord)) {
+        case LIST:
+            return new ListCommand();
+        case MARK:
+            return new MarkCommand(commandArgs);
+        case UNMARK:
+            return new UnmarkCommand(commandArgs);
+        case DELETE:
+            return new DeleteCommand(commandArgs);
+        case TODO:
+            return new TodoCommand(parseTodo(commandArgs));
+        case DEADLINE:
+            return new DeadlineCommand(parseDeadline(commandArgs));
+        case EVENT:
+            return new EventCommand(parseEvent(commandArgs));
+        case ON:
+            return new OnCommand(parseOnDate(commandArgs));
+        case BYE:
+            return new ExitCommand();
+        default:
+            throw new PDDException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+        }
+    }
 
     /** Returns the command word (before the first space), e.g. "deadline" from "deadline return book /by ...". */
-    public static String getCommandWord(String fullCommand) {
+    private static String getCommandWord(String fullCommand) {
         int spaceIndex = fullCommand.indexOf(' ');
         return spaceIndex == -1 ? fullCommand : fullCommand.substring(0, spaceIndex);
     }
 
     /** Returns the trimmed text after the command word, or "" if there is none. */
-    public static String getCommandArgs(String fullCommand) {
+    private static String getCommandArgs(String fullCommand) {
         int spaceIndex = fullCommand.indexOf(' ');
         return spaceIndex == -1 ? "" : fullCommand.substring(spaceIndex + 1).trim();
     }
 
     /** Resolves a command word to a {@link CommandType}, throwing if it isn't recognized. */
-    public static CommandType parseCommandType(String commandWord) throws PDDException {
+    private static CommandType parseCommandType(String commandWord) throws PDDException {
         try {
             return CommandType.valueOf(commandWord.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -34,7 +66,7 @@ public class Parser {
     }
 
     /** Parses the arguments of a {@code todo} command into a {@link Todo}. */
-    public static Todo parseTodo(String commandArgs) throws PDDException {
+    private static Todo parseTodo(String commandArgs) throws PDDException {
         if (commandArgs.isEmpty()) {
             throw new PDDException("OOPS!!! The description of a todo cannot be empty.");
         }
@@ -42,7 +74,7 @@ public class Parser {
     }
 
     /** Parses the arguments of a {@code deadline} command into a {@link Deadline}. */
-    public static Deadline parseDeadline(String commandArgs) throws PDDException {
+    private static Deadline parseDeadline(String commandArgs) throws PDDException {
         if (commandArgs.isEmpty()) {
             throw new PDDException("OOPS!!! The description of a deadline cannot be empty.");
         }
@@ -56,7 +88,7 @@ public class Parser {
     }
 
     /** Parses the arguments of an {@code event} command into an {@link Event}. */
-    public static Event parseEvent(String commandArgs) throws PDDException {
+    private static Event parseEvent(String commandArgs) throws PDDException {
         if (commandArgs.isEmpty()) {
             throw new PDDException("OOPS!!! The description of an event cannot be empty.");
         }
@@ -75,7 +107,7 @@ public class Parser {
     }
 
     /** Parses the arguments of an {@code on} command into the date to filter tasks by. */
-    public static LocalDate parseOnDate(String commandArgs) throws PDDException {
+    private static LocalDate parseOnDate(String commandArgs) throws PDDException {
         if (commandArgs.isEmpty()) {
             throw new PDDException("OOPS!!! Please provide a date, e.g. on 2019-10-15");
         }
