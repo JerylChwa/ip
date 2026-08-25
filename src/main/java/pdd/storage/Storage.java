@@ -32,6 +32,7 @@ import pdd.task.Todo;
 public class Storage {
     private final Path filePath;
 
+    /** Creates a storage backed by the save file at the given path. */
     public Storage(String filePath) {
         this.filePath = Path.of(filePath);
     }

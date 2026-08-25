@@ -2,10 +2,12 @@ package pdd.task;
 
 import java.time.LocalDate;
 
+/** A task that spans from a specific date to a (freeform) end time/date. */
 public class Event extends Task {
     protected LocalDate from;
     protected String to;
 
+    /** Creates a not-done event with the given description, start date, and freeform end text. */
     public Event(String description, LocalDate from, String to) {
         super(description);
         this.from = from;
@@ -22,6 +24,7 @@ public class Event extends Task {
         return "E | " + getStatusValue() + " | " + description + " | " + from + " | " + to;
     }
 
+    /** {@inheritDoc} An event occurs on its start date. */
     @Override
     public boolean occursOn(LocalDate date) {
         return from.equals(date);

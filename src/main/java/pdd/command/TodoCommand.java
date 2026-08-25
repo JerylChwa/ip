@@ -9,6 +9,7 @@ import pdd.ui.Ui;
 public class TodoCommand extends Command {
     private final Todo todo;
 
+    /** Creates a command that will add the given already-parsed todo to the task list. */
     public TodoCommand(Todo todo) {
         this.todo = todo;
     }

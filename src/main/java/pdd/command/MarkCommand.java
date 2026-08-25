@@ -10,6 +10,7 @@ import pdd.ui.Ui;
 public class MarkCommand extends Command {
     private final String taskNumberArg;
 
+    /** Creates a command that will mark the task at the given 1-based position (as typed by the user) done. */
     public MarkCommand(String taskNumberArg) {
         this.taskNumberArg = taskNumberArg;
     }

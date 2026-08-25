@@ -10,6 +10,7 @@ import pdd.ui.Ui;
 public class DeleteCommand extends Command {
     private final String taskNumberArg;
 
+    /** Creates a command that will remove the task at the given 1-based position (as typed by the user). */
     public DeleteCommand(String taskNumberArg) {
         this.taskNumberArg = taskNumberArg;
     }

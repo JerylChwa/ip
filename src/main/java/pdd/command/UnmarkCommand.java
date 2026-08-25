@@ -10,6 +10,7 @@ import pdd.ui.Ui;
 public class UnmarkCommand extends Command {
     private final String taskNumberArg;
 
+    /** Creates a command that will mark the task at the given 1-based position (as typed by the user) not done. */
     public UnmarkCommand(String taskNumberArg) {
         this.taskNumberArg = taskNumberArg;
     }

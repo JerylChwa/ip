@@ -9,6 +9,7 @@ import pdd.ui.Ui;
 public class DeadlineCommand extends Command {
     private final Deadline deadline;
 
+    /** Creates a command that will add the given already-parsed deadline to the task list. */
     public DeadlineCommand(Deadline deadline) {
         this.deadline = deadline;
     }
