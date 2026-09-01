@@ -36,6 +36,13 @@ public class Ui {
         this.writer = writer;
     }
 
+    /** Prints each given line, in order. */
+    private void print(String... lines) {
+        for (String line : lines) {
+            writer.accept(line);
+        }
+    }
+
     /** Prints the divider line shown before and after every command's response. */
     public void showLine() {
         writer.accept(LINE);
@@ -49,9 +56,7 @@ public class Ui {
                 + "|  __/| |_| | |_| |\n"
                 + "|_|   |____/|____/ \n";
         showLine();
-        writer.accept(banner);
-        writer.accept("Hello! I'm PDD.");
-        writer.accept("What can I do for you?");
+        print(banner, "Hello! I'm PDD.", "What can I do for you?");
         showLine();
     }
 
@@ -95,28 +100,24 @@ public class Ui {
 
     /** Prints the confirmation shown after a task is marked done. */
     public void showMarked(Task task) {
-        writer.accept("Nice! I've marked this task as done:");
-        writer.accept("  " + task);
+        print("Nice! I've marked this task as done:", "  " + task);
     }
 
     /** Prints the confirmation shown after a task is marked not done. */
     public void showUnmarked(Task task) {
-        writer.accept("OK, I've marked this task as not done yet:");
-        writer.accept("  " + task);
+        print("OK, I've marked this task as not done yet:", "  " + task);
     }
 
     /** Prints the confirmation shown after a task is deleted. */
     public void showDeleted(Task task, int remainingCount) {
-        writer.accept("Noted. I've removed this task:");
-        writer.accept("  " + task);
-        writer.accept("Now you have " + remainingCount + " tasks in the list.");
+        print("Noted. I've removed this task:", "  " + task,
+                "Now you have " + remainingCount + " tasks in the list.");
     }
 
     /** Prints the confirmation shown after a task is added. */
     public void showAdded(Task task, int totalCount) {
-        writer.accept("Got it. I've added this task:");
-        writer.accept("  " + task);
-        writer.accept("Now you have " + totalCount + " tasks in the list.");
+        print("Got it. I've added this task:", "  " + task,
+                "Now you have " + totalCount + " tasks in the list.");
     }
 
     /** Prints the tasks matching a search keyword, numbered from 1. */
