@@ -122,8 +122,7 @@ public class ParserTest {
 
     @Test
     public void parse_deadlineWithInvalidDate_throwsException() {
-        PDDException e = assertThrows(PDDException.class,
-                () -> Parser.parse("deadline return book /by not-a-date"));
+        PDDException e = assertThrows(PDDException.class, () -> Parser.parse("deadline return book /by not-a-date"));
         assertEquals("OOPS!!! Please enter the date in yyyy-MM-dd format, e.g. 2019-10-15.", e.getMessage());
     }
 

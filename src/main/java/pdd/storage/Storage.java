@@ -96,26 +96,26 @@ public class Storage {
 
         Task task;
         switch (type) {
-        case "T":
-            if (parts.length != 3) {
-                throw new PDDException("wrong number of fields for a todo");
-            }
-            task = new Todo(description);
-            break;
-        case "D":
-            if (parts.length != 4) {
-                throw new PDDException("wrong number of fields for a deadline");
-            }
-            task = new Deadline(description, parseIsoDate(parts[3]));
-            break;
-        case "E":
-            if (parts.length != 5) {
-                throw new PDDException("wrong number of fields for an event");
-            }
-            task = new Event(description, parseIsoDate(parts[3]), parts[4]);
-            break;
-        default:
-            throw new PDDException("unknown task type: " + type);
+            case "T":
+                if (parts.length != 3) {
+                    throw new PDDException("wrong number of fields for a todo");
+                }
+                task = new Todo(description);
+                break;
+            case "D":
+                if (parts.length != 4) {
+                    throw new PDDException("wrong number of fields for a deadline");
+                }
+                task = new Deadline(description, parseIsoDate(parts[3]));
+                break;
+            case "E":
+                if (parts.length != 5) {
+                    throw new PDDException("wrong number of fields for an event");
+                }
+                task = new Event(description, parseIsoDate(parts[3]), parts[4]);
+                break;
+            default:
+                throw new PDDException("unknown task type: " + type);
         }
         if (isDone) {
             task.markAsDone();
