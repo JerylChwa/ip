@@ -39,28 +39,28 @@ public class Parser {
         String commandWord = getCommandWord(fullCommand);
         String commandArgs = getCommandArgs(fullCommand);
         switch (parseCommandType(commandWord)) {
-        case LIST:
-            return new ListCommand();
-        case MARK:
-            return new MarkCommand(commandArgs);
-        case UNMARK:
-            return new UnmarkCommand(commandArgs);
-        case DELETE:
-            return new DeleteCommand(commandArgs);
-        case TODO:
-            return new TodoCommand(parseTodo(commandArgs));
-        case DEADLINE:
-            return new DeadlineCommand(parseDeadline(commandArgs));
-        case EVENT:
-            return new EventCommand(parseEvent(commandArgs));
-        case ON:
-            return new OnCommand(parseOnDate(commandArgs));
-        case FIND:
-            return new FindCommand(parseFindKeyword(commandArgs));
-        case BYE:
-            return new ExitCommand();
-        default:
-            throw new PDDException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+            case LIST:
+                return new ListCommand();
+            case MARK:
+                return new MarkCommand(commandArgs);
+            case UNMARK:
+                return new UnmarkCommand(commandArgs);
+            case DELETE:
+                return new DeleteCommand(commandArgs);
+            case TODO:
+                return new TodoCommand(parseTodo(commandArgs));
+            case DEADLINE:
+                return new DeadlineCommand(parseDeadline(commandArgs));
+            case EVENT:
+                return new EventCommand(parseEvent(commandArgs));
+            case ON:
+                return new OnCommand(parseOnDate(commandArgs));
+            case FIND:
+                return new FindCommand(parseFindKeyword(commandArgs));
+            case BYE:
+                return new ExitCommand();
+            default:
+                throw new PDDException("OOPS!!! I'm sorry, but I don't know what that means :-(");
         }
     }
 
