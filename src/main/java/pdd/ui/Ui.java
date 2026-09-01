@@ -3,6 +3,7 @@ package pdd.ui;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 import pdd.task.Task;
 
@@ -12,15 +13,32 @@ import pdd.task.Task;
  * responses to each command (task added/removed/listed, errors, etc).
  * Keeping all console I/O here means the rest of the program can work
  * with plain data and doesn't need to know how output is formatted.
+ *
+ * <p>Where each line goes is pluggable via {@code writer}: the console
+ * text UI writes to {@link System#out}, while the JavaFX GUI ({@code
+ * pdd.PDD#getResponse}) collects the same lines into a response string
+ * instead, letting every {@code Command} keep calling the same
+ * {@code showXxx} methods regardless of which UI is in front.
  */
 public class Ui {
     private static final String LINE = "____________________________________________________________";
 
-    private final Scanner scanner = new Scanner(System.in);
+    private final Consumer<String> writer;
+    private Scanner scanner;
+
+    /** Creates a console-backed Ui: every line is printed to {@link System#out}. */
+    public Ui() {
+        this(System.out::println);
+    }
+
+    /** Creates a Ui that sends every line it would otherwise print to {@code writer} instead. */
+    public Ui(Consumer<String> writer) {
+        this.writer = writer;
+    }
 
     /** Prints the divider line shown before and after every command's response. */
     public void showLine() {
-        System.out.println(LINE);
+        writer.accept(LINE);
     }
 
     /** Prints the startup banner and greeting. */
@@ -31,78 +49,81 @@ public class Ui {
                 + "|  __/| |_| | |_| |\n"
                 + "|_|   |____/|____/ \n";
         showLine();
-        System.out.println(banner);
-        System.out.println("Hello! I'm PDD.");
-        System.out.println("What can I do for you?");
+        writer.accept(banner);
+        writer.accept("Hello! I'm PDD.");
+        writer.accept("What can I do for you?");
         showLine();
     }
 
     /** Prints the goodbye message shown when the user exits. */
     public void showGoodbye() {
-        System.out.println("Bye. Hope to see you again soon!");
+        writer.accept("Bye. Hope to see you again soon!");
     }
 
     /** Reads one full line of user input. */
     public String readCommand() {
+        if (scanner == null) {
+            scanner = new Scanner(System.in);
+        }
         return scanner.nextLine();
     }
 
     /** Prints an error message, e.g. from a caught {@link PDDException}. */
     public void showError(String message) {
-        System.out.println(message);
+        writer.accept(message);
     }
 
     /** Prints the full task list, numbered from 1. */
     public void showTaskList(List<Task> tasks) {
-        System.out.println("Here are the tasks in your list:");
+        writer.accept("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
+            writer.accept((i + 1) + "." + tasks.get(i));
         }
     }
 
     /** Prints the tasks that occur on the given date, numbered from 1. */
     public void showTasksOn(LocalDate date, List<Task> tasks) {
-        System.out.println("Here are the tasks on " + date.format(Task.DISPLAY_DATE_FORMAT) + ":");
+        writer.accept("Here are the tasks on " + date.format(Task.DISPLAY_DATE_FORMAT) + ":");
         int count = 0;
         for (Task task : tasks) {
             if (task.occursOn(date)) {
                 count++;
-                System.out.println(count + "." + task);
+                writer.accept(count + "." + task);
             }
         }
     }
 
     /** Prints the confirmation shown after a task is marked done. */
     public void showMarked(Task task) {
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println("  " + task);
+        writer.accept("Nice! I've marked this task as done:");
+        writer.accept("  " + task);
     }
 
     /** Prints the confirmation shown after a task is marked not done. */
     public void showUnmarked(Task task) {
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println("  " + task);
+        writer.accept("OK, I've marked this task as not done yet:");
+        writer.accept("  " + task);
     }
 
     /** Prints the confirmation shown after a task is deleted. */
     public void showDeleted(Task task, int remainingCount) {
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + remainingCount + " tasks in the list.");
+        writer.accept("Noted. I've removed this task:");
+        writer.accept("  " + task);
+        writer.accept("Now you have " + remainingCount + " tasks in the list.");
     }
 
     /** Prints the confirmation shown after a task is added. */
     public void showAdded(Task task, int totalCount) {
-        System.out.println("Got it. I've added this task:");
-        System.out.println("  " + task);
-        System.out.println("Now you have " + totalCount + " tasks in the list.");
+        writer.accept("Got it. I've added this task:");
+        writer.accept("  " + task);
+        writer.accept("Now you have " + totalCount + " tasks in the list.");
     }
 
     /** Prints the tasks matching a search keyword, numbered from 1. */
     public void showMatchingTasks(List<Task> matches) {
-        System.out.println("Here are the matching tasks in your list:");
+        writer.accept("Here are the matching tasks in your list:");
         for (int i = 0; i < matches.size(); i++) {
-            System.out.println((i + 1) + "." + matches.get(i));
+            writer.accept((i + 1) + "." + matches.get(i));
         }
     }
 }
