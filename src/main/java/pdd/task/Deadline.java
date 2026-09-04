@@ -9,6 +9,7 @@ public class Deadline extends Task {
     /** Creates a not-done deadline with the given description and due date. */
     public Deadline(String description, LocalDate by) {
         super(description);
+        assert by != null : "by must not be null; toString() and occursOn() rely on it";
         this.by = by;
     }
 

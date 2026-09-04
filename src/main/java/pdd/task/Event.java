@@ -10,6 +10,7 @@ public class Event extends Task {
     /** Creates a not-done event with the given description, start date, and freeform end text. */
     public Event(String description, LocalDate from, String to) {
         super(description);
+        assert from != null : "from must not be null; toString() and occursOn() rely on it";
         this.from = from;
         this.to = to;
     }

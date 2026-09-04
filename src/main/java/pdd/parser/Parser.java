@@ -64,6 +64,10 @@ public class Parser {
             case BYE:
                 return new ExitCommand();
             default:
+                // Unreachable: parseCommandType() only ever returns a CommandType constant,
+                // and every constant is handled by a case above. This differs from the
+                // PDDException thrown inside parseCommandType() for genuine user typos.
+                assert false : "Unhandled CommandType: every enum constant has a case above";
                 throw new PDDException("OOPS!!! I'm sorry, but I don't know what that means :-(");
         }
     }
