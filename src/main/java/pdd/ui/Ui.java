@@ -1,9 +1,11 @@
 package pdd.ui;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import pdd.task.Task;
 
@@ -38,9 +40,7 @@ public class Ui {
 
     /** Prints each given line, in order. */
     private void print(String... lines) {
-        for (String line : lines) {
-            writer.accept(line);
-        }
+        Arrays.stream(lines).forEach(writer);
     }
 
     /** Prints the divider line shown before and after every command's response. */
@@ -93,14 +93,10 @@ public class Ui {
 
     /** Prints the tasks that occur on the given date, numbered from 1. */
     public void showTasksOn(LocalDate date, List<Task> tasks) {
-        writer.accept("Here are the tasks on " + date.format(Task.DISPLAY_DATE_FORMAT) + ":");
-        int count = 0;
-        for (Task task : tasks) {
-            if (task.occursOn(date)) {
-                count++;
-                writer.accept(count + "." + task);
-            }
-        }
+        List<Task> tasksOnDate = tasks.stream()
+                .filter(task -> task.occursOn(date))
+                .collect(Collectors.toList());
+        showNumberedTasks("Here are the tasks on " + date.format(Task.DISPLAY_DATE_FORMAT) + ":", tasksOnDate);
     }
 
     /** Prints the confirmation shown after a task is marked done. */

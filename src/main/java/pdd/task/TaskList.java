@@ -1,7 +1,7 @@
 package pdd.task;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import pdd.PDDException;
 
@@ -70,12 +70,8 @@ public class TaskList {
     /** Returns the tasks whose description contains the given keyword (case-insensitive). */
     public List<Task> findMatching(String keyword) {
         String lowerKeyword = keyword.toLowerCase();
-        List<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(lowerKeyword))
+                .collect(Collectors.toList());
     }
 }

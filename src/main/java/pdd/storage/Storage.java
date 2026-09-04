@@ -10,6 +10,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import pdd.PDDException;
 import pdd.task.Deadline;
@@ -77,10 +78,11 @@ public class Storage {
                 parentDir.mkdirs();
                 assert parentDir.exists() : "parentDir should exist after mkdirs()";
             }
+            String content = tasks.stream()
+                    .map(task -> task.toFileFormat() + System.lineSeparator())
+                    .collect(Collectors.joining());
             try (FileWriter writer = new FileWriter(filePath.toFile())) {
-                for (Task task : tasks) {
-                    writer.write(task.toFileFormat() + System.lineSeparator());
-                }
+                writer.write(content);
             }
         } catch (IOException e) {
             System.out.println("OOPS!!! Could not save the data file: " + e.getMessage());
