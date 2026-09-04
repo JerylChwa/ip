@@ -21,7 +21,8 @@ public class Event extends Task {
 
     /** Serializes this task to a single line in the save-file format. */
     public String toFileFormat() {
-        return "E | " + getStatusValue() + " | " + description + " | " + from + " | " + to;
+        return "E" + FIELD_SEPARATOR + getStatusValue() + FIELD_SEPARATOR + description
+                + FIELD_SEPARATOR + from + FIELD_SEPARATOR + to;
     }
 
     /** {@inheritDoc} An event occurs on its start date. */

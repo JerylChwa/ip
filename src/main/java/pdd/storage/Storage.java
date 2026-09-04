@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import pdd.PDDException;
 import pdd.task.Deadline;
@@ -86,7 +87,7 @@ public class Storage {
     }
 
     private Task parseTask(String line) throws PDDException {
-        String[] parts = line.split(" \\| ");
+        String[] parts = line.split(Pattern.quote(Task.FIELD_SEPARATOR));
         if (parts.length < 3) {
             throw new PDDException("not enough fields");
         }
