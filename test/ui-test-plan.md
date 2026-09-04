@@ -735,6 +735,77 @@ ____________________________________________________________
 
 ---
 
+## TC13: Sort the task list
+
+**Aim**: Verify `sort` reorders the task list with dated tasks
+(deadlines/events) first in chronological order, followed by undated tasks
+(todos) in alphabetical order of description, and that `list` afterwards
+reflects the new order.
+
+**Input**:
+```
+todo z todo
+deadline b deadline /by 2019-12-15
+todo a todo
+event c event /from 2019-12-01 /to 4pm
+sort
+list
+bye
+```
+
+**Expected output**:
+```
+____________________________________________________________
+ ____  ____  ____  
+|  _ \|  _ \|  _ \ 
+| |_) | | | | | | |
+|  __/| |_| | |_| |
+|_|   |____/|____/ 
+
+Hello! I'm PDD.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] z todo
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] b deadline (by: Dec 15 2019)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] a todo
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] c event (from: Dec 01 2019 to: 4pm)
+Now you have 4 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Sorted! Here are your tasks, in order:
+1.[E][ ] c event (from: Dec 01 2019 to: 4pm)
+2.[D][ ] b deadline (by: Dec 15 2019)
+3.[T][ ] a todo
+4.[T][ ] z todo
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[E][ ] c event (from: Dec 01 2019 to: 4pm)
+2.[D][ ] b deadline (by: Dec 15 2019)
+3.[T][ ] a todo
+4.[T][ ] z todo
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+---
+
 ## Adding new test cases
 
 Append a new `## TCn: <title>` section following the same structure (Aim,

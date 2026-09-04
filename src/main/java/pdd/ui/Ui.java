@@ -125,4 +125,9 @@ public class Ui {
     public void showMatchingTasks(List<Task> matches) {
         showNumberedTasks("Here are the matching tasks in your list:", matches);
     }
+
+    /** Prints the confirmation shown after the task list is sorted, followed by the new order. */
+    public void showSorted(List<Task> tasks) {
+        showNumberedTasks("Sorted! Here are your tasks, in order:", tasks);
+    }
 }

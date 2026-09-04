@@ -13,6 +13,7 @@ import pdd.command.FindCommand;
 import pdd.command.ListCommand;
 import pdd.command.MarkCommand;
 import pdd.command.OnCommand;
+import pdd.command.SortCommand;
 import pdd.command.TodoCommand;
 import pdd.command.UnmarkCommand;
 import pdd.task.Deadline;
@@ -32,7 +33,7 @@ public class Parser {
     private static final String TO_DELIMITER = " /to ";
 
     /** The kind of command a user input line names. */
-    private enum CommandType { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON, FIND, BYE }
+    private enum CommandType { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON, FIND, SORT, BYE }
 
     /**
      * Parses one full line of user input into a ready-to-run {@link Command}.
@@ -61,6 +62,8 @@ public class Parser {
                 return new OnCommand(parseOnDate(commandArgs));
             case FIND:
                 return new FindCommand(parseFindKeyword(commandArgs));
+            case SORT:
+                return new SortCommand();
             case BYE:
                 return new ExitCommand();
             default:

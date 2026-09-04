@@ -3,6 +3,7 @@ package pdd.task;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,5 +80,18 @@ public class TaskListTest {
     public void findMatching_noDescriptionContainsKeyword_returnsEmptyList() {
         TaskList tasks = new TaskList(new ArrayList<>(List.of(new Todo("read book"))));
         assertEquals(List.of(), tasks.findMatching("xyz"));
+    }
+
+    @Test
+    public void sortTasks_mixedTaskTypes_datedTasksFirstChronologicallyThenUndatedAlphabetically() {
+        Todo zTodo = new Todo("z todo");
+        Todo aTodo = new Todo("a todo");
+        Deadline laterDeadline = new Deadline("later deadline", LocalDate.of(2019, 12, 15));
+        Event earlierEvent = new Event("earlier event", LocalDate.of(2019, 12, 1), "4pm");
+        TaskList tasks = new TaskList(new ArrayList<>(List.of(zTodo, laterDeadline, aTodo, earlierEvent)));
+
+        tasks.sortTasks();
+
+        assertEquals(List.of(earlierEvent, laterDeadline, aTodo, zTodo), tasks.getTasks());
     }
 }
