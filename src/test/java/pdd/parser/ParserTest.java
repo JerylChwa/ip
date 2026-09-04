@@ -131,4 +131,16 @@ public class ParserTest {
         PDDException e = assertThrows(PDDException.class, () -> Parser.parse("blah"));
         assertEquals("OOPS!!! I'm sorry, but I don't know what that means :-(", e.getMessage());
     }
+
+    @Test
+    public void parse_sortCommand_sortsTaskListInPlace() throws PDDException {
+        TaskList tasks = newTaskList();
+        tasks.add(new pdd.task.Todo("z todo"));
+        tasks.add(new pdd.task.Todo("a todo"));
+        Command c = Parser.parse("sort");
+        assertTrue(c instanceof pdd.command.SortCommand);
+        c.execute(tasks, new Ui(), newStorage());
+        assertEquals("a todo", tasks.get(0).getDescription());
+        assertEquals("z todo", tasks.get(1).getDescription());
+    }
 }

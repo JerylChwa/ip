@@ -1,6 +1,7 @@
 package pdd.task;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /** A task that needs to be done by a specific date. */
 public class Deadline extends Task {
@@ -27,5 +28,11 @@ public class Deadline extends Task {
     @Override
     public boolean occursOn(LocalDate date) {
         return by.equals(date);
+    }
+
+    /** {@inheritDoc} A deadline sorts by its due date. */
+    @Override
+    public Optional<LocalDate> getSortDate() {
+        return Optional.of(by);
     }
 }

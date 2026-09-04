@@ -1,6 +1,7 @@
 package pdd.task;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /** A task that spans from a specific date to a (freeform) end time/date. */
 public class Event extends Task {
@@ -30,5 +31,11 @@ public class Event extends Task {
     @Override
     public boolean occursOn(LocalDate date) {
         return from.equals(date);
+    }
+
+    /** {@inheritDoc} An event sorts by its start date. */
+    @Override
+    public Optional<LocalDate> getSortDate() {
+        return Optional.of(from);
     }
 }

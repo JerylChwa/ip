@@ -2,6 +2,7 @@ package pdd.task;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * A single to-do item in the task list. Concrete subclasses ({@link Todo},
@@ -65,5 +66,14 @@ public abstract class Task {
     /** Returns whether this task occurs on the given date. Tasks without a date never match. */
     public boolean occursOn(LocalDate date) {
         return false;
+    }
+
+    /**
+     * Returns the date this task should be ordered by when sorting, or empty if
+     * this task has no relevant date (e.g. a {@link Todo}). Used by {@code
+     * TaskList#sortTasks()} to sort dated tasks chronologically.
+     */
+    public Optional<LocalDate> getSortDate() {
+        return Optional.empty();
     }
 }

@@ -1,5 +1,7 @@
 package pdd.task;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,5 +75,18 @@ public class TaskList {
         return tasks.stream()
                 .filter(task -> task.getDescription().toLowerCase().contains(lowerKeyword))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Sorts this list in place: tasks with a date (deadlines/events) first, in
+     * chronological order, followed by tasks without a date (todos) in
+     * alphabetical order of description.
+     */
+    public void sortTasks() {
+        Comparator<Task> byDate = Comparator.comparing(
+                task -> task.getSortDate().orElse(LocalDate.MAX));
+        Comparator<Task> byDescription = Comparator.comparing(
+                Task::getDescription, String.CASE_INSENSITIVE_ORDER);
+        tasks.sort(byDate.thenComparing(byDescription));
     }
 }
