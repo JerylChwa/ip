@@ -45,11 +45,14 @@ public class TaskList {
             throw new PDDException("OOPS!!! Task number " + number + " does not exist. "
                     + "You have " + tasks.size() + " task(s) in the list.");
         }
-        return number - 1;
+        int index = number - 1;
+        assert index >= 0 && index < tasks.size() : "toIndex must return a valid 0-based index";
+        return index;
     }
 
     /** Returns the task at the given 0-based index. */
     public Task get(int index) {
+        assert index >= 0 && index < tasks.size() : "get() requires an index already validated by toIndex()";
         return tasks.get(index);
     }
 
@@ -60,6 +63,7 @@ public class TaskList {
 
     /** Removes and returns the task at the given 0-based index. */
     public Task delete(int index) {
+        assert index >= 0 && index < tasks.size() : "delete() requires an index already validated by toIndex()";
         return tasks.remove(index);
     }
 
