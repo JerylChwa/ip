@@ -14,6 +14,6 @@ public class Todo extends Task {
 
     /** Serializes this task to a single line in the save-file format. */
     public String toFileFormat() {
-        return "T | " + getStatusValue() + " | " + description;
+        return "T" + FIELD_SEPARATOR + getStatusValue() + FIELD_SEPARATOR + description;
     }
 }

@@ -27,6 +27,10 @@ import pdd.task.Todo;
  * input doesn't fit what that command expects.
  */
 public class Parser {
+    private static final String BY_DELIMITER = " /by ";
+    private static final String FROM_DELIMITER = " /from ";
+    private static final String TO_DELIMITER = " /to ";
+
     /** The kind of command a user input line names. */
     private enum CommandType { LIST, MARK, UNMARK, DELETE, TODO, DEADLINE, EVENT, ON, FIND, BYE }
 
@@ -105,13 +109,11 @@ public class Parser {
         if (commandArgs.isEmpty()) {
             throw new PDDException("OOPS!!! The description of a deadline cannot be empty.");
         }
-        String[] parts = commandArgs.split(" /by ", 2);
-        if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
-            throw new PDDException("OOPS!!! A deadline needs a description and a '/by' "
-                    + "date, e.g. deadline return book /by 2019-10-15");
-        }
-        LocalDate by = parseDate(parts[1].trim());
-        return new Deadline(parts[0].trim(), by);
+        String[] parts = splitIntoTwoNonEmptyParts(commandArgs, BY_DELIMITER,
+                "OOPS!!! A deadline needs a description and a '/by' "
+                        + "date, e.g. deadline return book /by 2019-10-15");
+        LocalDate by = parseDate(parts[1]);
+        return new Deadline(parts[0], by);
     }
 
     /** Parses the arguments of an {@code event} command into an {@link Event}. */
@@ -119,18 +121,26 @@ public class Parser {
         if (commandArgs.isEmpty()) {
             throw new PDDException("OOPS!!! The description of an event cannot be empty.");
         }
-        String[] parts = commandArgs.split(" /from ", 2);
-        if (parts.length < 2 || parts[0].trim().isEmpty()) {
-            throw new PDDException("OOPS!!! An event needs a description, a '/from' date and a "
-                    + "'/to' time, e.g. event meeting /from 2019-10-15 /to 4pm");
+        String eventUsage = "OOPS!!! An event needs a description, a '/from' date and a "
+                + "'/to' time, e.g. event meeting /from 2019-10-15 /to 4pm";
+        String[] parts = splitIntoTwoNonEmptyParts(commandArgs, FROM_DELIMITER, eventUsage);
+        String[] fromTo = splitIntoTwoNonEmptyParts(parts[1], TO_DELIMITER, eventUsage);
+        LocalDate from = parseDate(fromTo[0]);
+        return new Event(parts[0], from, fromTo[1]);
+    }
+
+    /**
+     * Splits {@code text} on the first occurrence of {@code delimiter} into exactly two
+     * trimmed, non-empty parts, throwing a {@link PDDException} with {@code usageMessage}
+     * if the delimiter is missing or either side is empty.
+     */
+    private static String[] splitIntoTwoNonEmptyParts(String text, String delimiter,
+            String usageMessage) throws PDDException {
+        String[] parts = text.split(delimiter, 2);
+        if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+            throw new PDDException(usageMessage);
         }
-        String[] fromTo = parts[1].split(" /to ", 2);
-        if (fromTo.length < 2 || fromTo[0].trim().isEmpty() || fromTo[1].trim().isEmpty()) {
-            throw new PDDException("OOPS!!! An event needs a description, a '/from' date and a "
-                    + "'/to' time, e.g. event meeting /from 2019-10-15 /to 4pm");
-        }
-        LocalDate from = parseDate(fromTo[0].trim());
-        return new Event(parts[0].trim(), from, fromTo[1].trim());
+        return new String[] { parts[0].trim(), parts[1].trim() };
     }
 
     /** Parses the arguments of an {@code on} command into the date to filter tasks by. */

@@ -20,7 +20,7 @@ public class Deadline extends Task {
 
     /** Serializes this task to a single line in the save-file format. */
     public String toFileFormat() {
-        return "D | " + getStatusValue() + " | " + description + " | " + by;
+        return "D" + FIELD_SEPARATOR + getStatusValue() + FIELD_SEPARATOR + description + FIELD_SEPARATOR + by;
     }
 
     /** {@inheritDoc} A deadline occurs on the date it's due. */
