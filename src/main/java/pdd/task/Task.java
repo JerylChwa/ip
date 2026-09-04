@@ -13,6 +13,13 @@ public abstract class Task {
     /** Shared display format for task dates, e.g. "Oct 15 2019". Public: used by pdd.ui.Ui as well. */
     public static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
+    /**
+     * Field separator used in the save-file format; shared so the write side
+     * ({@code toFileFormat()} implementations) and the read side ({@code
+     * pdd.storage.Storage}) can't drift out of sync.
+     */
+    public static final String FIELD_SEPARATOR = " | ";
+
     protected String description;
     protected boolean isDone;
 

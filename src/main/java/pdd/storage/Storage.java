@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import pdd.PDDException;
 import pdd.task.Deadline;
@@ -87,7 +88,7 @@ public class Storage {
     }
 
     private Task parseTask(String line) throws PDDException {
-        String[] parts = line.split(" \\| ");
+        String[] parts = line.split(Pattern.quote(Task.FIELD_SEPARATOR));
         if (parts.length < 3) {
             throw new PDDException("not enough fields");
         }
@@ -95,34 +96,41 @@ public class Storage {
         boolean isDone = parseStatus(parts[1]);
         String description = parts[2];
 
-        Task task;
-        switch (type) {
-            case "T":
-                if (parts.length != 3) {
-                    throw new PDDException("wrong number of fields for a todo");
-                }
-                task = new Todo(description);
-                break;
-            case "D":
-                if (parts.length != 4) {
-                    throw new PDDException("wrong number of fields for a deadline");
-                }
-                task = new Deadline(description, parseIsoDate(parts[3]));
-                break;
-            case "E":
-                if (parts.length != 5) {
-                    throw new PDDException("wrong number of fields for an event");
-                }
-                task = new Event(description, parseIsoDate(parts[3]), parts[4]);
-                break;
-            default:
-                throw new PDDException("unknown task type: " + type);
-        }
+        Task task = switch (type) {
+            case "T" -> parseTodoLine(parts, description);
+            case "D" -> parseDeadlineLine(parts, description);
+            case "E" -> parseEventLine(parts, description);
+            default -> throw new PDDException("unknown task type: " + type);
+        };
         assert task != null : "task must be assigned by every non-default switch branch above";
         if (isDone) {
             task.markAsDone();
         }
         return task;
+    }
+
+    /** Builds a {@link Todo} from a save-file line's already-split fields. */
+    private Todo parseTodoLine(String[] parts, String description) throws PDDException {
+        if (parts.length != 3) {
+            throw new PDDException("wrong number of fields for a todo");
+        }
+        return new Todo(description);
+    }
+
+    /** Builds a {@link Deadline} from a save-file line's already-split fields. */
+    private Deadline parseDeadlineLine(String[] parts, String description) throws PDDException {
+        if (parts.length != 4) {
+            throw new PDDException("wrong number of fields for a deadline");
+        }
+        return new Deadline(description, parseIsoDate(parts[3]));
+    }
+
+    /** Builds an {@link Event} from a save-file line's already-split fields. */
+    private Event parseEventLine(String[] parts, String description) throws PDDException {
+        if (parts.length != 5) {
+            throw new PDDException("wrong number of fields for an event");
+        }
+        return new Event(description, parseIsoDate(parts[3]), parts[4]);
     }
 
     private LocalDate parseIsoDate(String text) throws PDDException {

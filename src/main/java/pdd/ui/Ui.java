@@ -80,7 +80,12 @@ public class Ui {
 
     /** Prints the full task list, numbered from 1. */
     public void showTaskList(List<Task> tasks) {
-        writer.accept("Here are the tasks in your list:");
+        showNumberedTasks("Here are the tasks in your list:", tasks);
+    }
+
+    /** Prints the given header followed by each task in the list, numbered from 1. */
+    private void showNumberedTasks(String header, List<Task> tasks) {
+        writer.accept(header);
         for (int i = 0; i < tasks.size(); i++) {
             writer.accept((i + 1) + "." + tasks.get(i));
         }
@@ -122,9 +127,6 @@ public class Ui {
 
     /** Prints the tasks matching a search keyword, numbered from 1. */
     public void showMatchingTasks(List<Task> matches) {
-        writer.accept("Here are the matching tasks in your list:");
-        for (int i = 0; i < matches.size(); i++) {
-            writer.accept((i + 1) + "." + matches.get(i));
-        }
+        showNumberedTasks("Here are the matching tasks in your list:", matches);
     }
 }
