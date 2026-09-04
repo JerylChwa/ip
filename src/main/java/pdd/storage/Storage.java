@@ -75,6 +75,7 @@ public class Storage {
             File parentDir = filePath.toAbsolutePath().getParent().toFile();
             if (!parentDir.exists()) {
                 parentDir.mkdirs();
+                assert parentDir.exists() : "parentDir should exist after mkdirs()";
             }
             String content = tasks.stream()
                     .map(task -> task.toFileFormat() + System.lineSeparator())
@@ -119,6 +120,7 @@ public class Storage {
             default:
                 throw new PDDException("unknown task type: " + type);
         }
+        assert task != null : "task must be assigned by every non-default switch branch above";
         if (isDone) {
             task.markAsDone();
         }

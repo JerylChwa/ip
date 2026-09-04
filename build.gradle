@@ -67,6 +67,7 @@ task runText(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'pdd.PDD'
     standardInput = System.in
+    enableAssertions = true
 }
 
 jar {
@@ -82,4 +83,5 @@ shadowJar {
 
 run {
     standardInput = System.in
+    enableAssertions = true
 }
