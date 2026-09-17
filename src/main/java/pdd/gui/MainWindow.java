@@ -17,6 +17,8 @@ import pdd.PDD;
  * displaying its response as a new dialog box each time.
  */
 public class MainWindow extends AnchorPane {
+    private static final String ERROR_PREFIX = "OOPS!!!";
+
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -40,21 +42,24 @@ public class MainWindow extends AnchorPane {
     /** Injects the chatbot backend and shows its greeting as the first message. */
     public void setPdd(PDD pdd) {
         this.pdd = pdd;
-        dialogContainer.getChildren().add(DialogBox.getPddDialog(pdd.getGreeting(), pddImage));
+        dialogContainer.getChildren().add(DialogBox.getPddDialog(pdd.getGreeting(), pddImage, false));
     }
 
     /**
      * Sends the text field's contents to {@link PDD#getResponse(String)}, shows both the
      * user's message and PDD's response as dialog boxes, clears the field, and closes the
-     * window if that command was an exit command (e.g. {@code bye}).
+     * window if that command was an exit command (e.g. {@code bye}). Blank input is ignored.
      */
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
+        if (input.isBlank()) {
+            return;
+        }
         String response = pdd.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getPddDialog(response, pddImage));
+                DialogBox.getPddDialog(response, pddImage, response.startsWith(ERROR_PREFIX)));
         userInput.clear();
         if (pdd.isExit()) {
             Platform.exit();

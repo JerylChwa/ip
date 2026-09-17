@@ -51,10 +51,14 @@ public class DialogBox extends HBox {
         return new DialogBox(text, img);
     }
 
-    /** Creates a left-aligned dialog box for a message from PDD. */
-    public static DialogBox getPddDialog(String text, Image img) {
+    /**
+     * Creates a left-aligned dialog box for a message from PDD, styled as an
+     * error bubble instead of a normal reply when {@code isError} is true.
+     */
+    public static DialogBox getPddDialog(String text, Image img, boolean isError) {
         DialogBox db = new DialogBox(text, img);
         db.flip();
+        db.dialog.getStyleClass().add(isError ? "error-dialog" : "bot-dialog");
         return db;
     }
 }
