@@ -8,6 +8,7 @@ import pdd.ui.Ui;
 public class FindCommand extends Command {
     private final String keyword;
 
+    /** Creates a command that will list the tasks whose description contains the given keyword. */
     public FindCommand(String keyword) {
         this.keyword = keyword;
     }
