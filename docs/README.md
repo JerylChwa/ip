@@ -8,11 +8,13 @@ your tasks are still there next time you open it.
 
 ## Quick start
 
-1. Ensure you have JDK 25 installed.
+1. Ensure you have Java 25 installed.
 2. Download the latest `pdd.jar` from the
-   [releases page](https://github.com/JerylChwa/ip/releases).
-3. Run it with `java -jar pdd.jar` to open the GUI shown above, or type
-   a command in the input box and press Enter/click **Send**.
+   [releases page](https://github.com/JerylChwa/ip/releases) and copy it
+   into an empty folder (PDD saves your tasks in a `data` folder next to it).
+3. Open a terminal in that folder and run `java -jar pdd.jar` to open the
+   GUI shown above.
+4. Type a command in the input box and press Enter or click **Send**.
 
 All commands below work the same way whether you're using the GUI or the
 console text UI (`./gradlew runText` if running from source).
